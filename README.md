@@ -1,4 +1,4 @@
-# ADL HW2 <br>Chinese News Summarization
+# Applied Deep Learning HW2 <br>Chinese News Summarization
 
 ### Task Description
 
