@@ -1,42 +1,46 @@
-# ADL HW2 Chinese News Summarization
+# ADL HW2 <br>Chinese News Summarization
 
-## 執行
+### Task Description
+
+We are provided with Chinese news as input for this task, and our objective is to generate the corresponding title.
+
+### How to Run
 
 ```bash
 bash ./download.sh
 bash ./run.sh /path/to/input.jsonl /path/to/output.jsonl
 ```
 
-### `download.sh`
+#### `download.sh`
 
-下載訓練完成的模型。
+Download the trained model.
 
-### `run.sh`
+#### `run.sh`
 
-將測試資料輸入模型，並輸出預測結果。
+Input the test data into the model and generate the predicted results. 
 
-## 完整訓練過程
+### Complete Training Process
 
-#### Step 1 Turn jsonl file to json file
+##### Step 1 Turn jsonl file to json file
 
 ```bash
 $ python jsonl_to_json.py --in_file ${1} --out_file tmp.json --test
 $ python3 jsonl_to_json.py --in_file train.jsonl --out_file train.json
 ```
 
-這步完成之後會分別將`input.jsonl`和`train.jsonl`轉換成`tmp.json`和`train.json`，因為 input file 沒有 title 那一欄，所以要特別加一個參數區分。
+After completing this step, `input.jsonl` and `train.jsonl` will be separately converted to `tmp.json` and `train.json`. Since the input file lacks the 'title' column, an additional parameter is added to distinguish it.
 
-#### Step 2 Training
+##### Step 2 Training
 
 ```bash
 $ python train.py
 ```
 
-這步完成之後會產生訓練完的 model。
+After completing this step, a fully trained model will be generated.
 
-程式碼主要是從 `run_summarization_no_trainer.py`[1] 做修改，只取訓練的部份，將 validation 的過程刪除。
+The code is primarily modified from the training section of `run_summarization_no_trainer.py`[1], extracting only the training part and removing the validation process.
 
-使用的 hyper parameter 如下：
+The hyperparameters used are as follows:
 
 | arguments                       | value               |
 | ------------------------------- | ------------------- |
@@ -53,20 +57,20 @@ $ python train.py
 | `--output_dir`                  | `model_e10b4`       |
 | `--seed`                        | `42`                |
 
-#### Step 3 Testing
+##### Step 3 Testing
 
 ```bash
 $ python test.py
 ```
 
-程式碼主要是從 `run_summarization_no_trainer.py`[1] 做修改，只取 validation 的部份，並輸出最後的預測結果，以`json`格式輸出。
+The code is primarily modified from `run_summarization_no_trainer.py`[1], focusing only on the validation part and outputting the final predictions in `json` format.
 
-此外，還有新增以下的超參數：
+Additionally, the following hyperparameters have been added:
 
-1. 加入 sampling 參數，例如：`top_k`, `top_p`, `do_sampling`。
-2. 加入 generation controlling 參數，例如：`temperature`, `length_penalty`, `repetition`。
+1. Introduced sampling parameters, such as `top_k`, `top_p`, and `do_sampling`.
+2. Added generation-controlling parameters, such as `temperature`, `length_penalty`, and `repetition`.
 
-使用的 hyper parameter 如下：
+The hyperparameters used are as follows:
 
 | arguments                 | value             |
 | ------------------------- | ----------------- |
@@ -80,22 +84,26 @@ $ python test.py
 | `--text_column`           | `maintext`        |
 | `--summary_column`        | `title`           |
 
-在 report 中會解釋為什麼選擇 beam search 而非 top k or top p sampling。
+In the report, the rationale for choosing beam search over top-k or top-p sampling will be explained. 
 
-#### Step 4 turn json file to jsonl file
+##### Step 4 turn json file to jsonl file
 
 ```bash
 $ python json_to_jsonl.py --in_file prediction.json --out_file ${2}
 ```
 
-由於最後要輸出`jsonl`格式，所以要再把`json`轉成`jsonl`。
+"As the final output needs to be in JSONL format, it is necessary to convert the JSON to JSONL."
 
-相關資料：
+Reference: 
 
-[1] `run_summarization_no_trainer.py`原始碼
+[1] `run_summarization_no_trainer.py` source code
 
 https://github.com/huggingface/transformers/blob/main/examples/pytorch/summarization/run_summarization_no_trainer.py
 
-[2] Summarization 相關資料
+[2] Summarization related work
 
 https://huggingface.co/docs/transformers/tasks/summarization
+
+Homework Spec: 
+
+https://docs.google.com/presentation/d/1yJEQUtzFREeuEnkBTXei4SFEftnmnP3i05m0J5aGsg8/edit#slide=id.gd486405158_0_68
